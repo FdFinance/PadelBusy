@@ -361,40 +361,117 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("**✅ Points forts du projet**")
     points_forts = []
-    
+
     if taux_occup_seuil < 0.50:
         points_forts.append("Seuil de rentabilité facilement atteignable")
-    
+
     if st.session_state.has_bar:
         points_forts.append("Revenus diversifiés avec bar/restaurant")
-    
+
     if resultats_data[2]['Marge'] > 15:
         points_forts.append(f"Bonne marge nette en année 3 ({resultats_data[2]['Marge']:.1f}%)")
-    
+
     if st.session_state.get('propose_cours'):
         points_forts.append("Revenus complémentaires via cours")
-    
+
+    if st.session_state.nb_terrains >= 4:
+        points_forts.append("Taille critique permettant d'organiser des tournois")
+
     for point in points_forts:
         st.markdown(f"- {point}")
 
 with col2:
     st.markdown("**⚠️ Points de vigilance**")
     points_vigilance = []
-    
+
     if taux_occup_seuil > 0.60:
         points_vigilance.append("Seuil de rentabilité exigeant")
-    
+
     if total_investment > 1000000:
         points_vigilance.append("Investissement initial important")
-    
+
     if not st.session_state.has_bar and not st.session_state.has_proshop:
         points_vigilance.append("Revenus dépendants uniquement de la location")
-    
+
     if resultats_data[0]['Résultat'] < 0:
-        points_vigilance.append("Résultat négatif en année 1 (normal)")
-    
+        points_vigilance.append("Résultat négatif en année 1 (normal en phase de lancement)")
+
+    if st.session_state.type_terrain == "Outdoor" and st.session_state.city not in ["Nice", "Marseille"]:
+        points_vigilance.append("Terrains outdoor : exploitation limitée hors saison")
+
     for point in points_vigilance:
         st.markdown(f"- {point}")
+
+# Recommandations personnalisées
+st.markdown("---")
+st.markdown("### 🎯 Recommandations personnalisées")
+
+recommandations = []
+
+# Recommandations basées sur les résultats
+if resultats_data[0]['Résultat'] < 0:
+    recommandations.append({
+        "type": "info",
+        "titre": "Première année déficitaire",
+        "message": "C'est normal pour un nouveau club. Prévoyez une trésorerie suffisante pour couvrir les 12-18 premiers mois. Concentrez-vous sur l'acquisition de clients réguliers."
+    })
+
+if taux_occup_seuil > 0.55:
+    recommandations.append({
+        "type": "warning",
+        "titre": "Optimisez votre remplissage",
+        "message": f"Vous devez atteindre {taux_occup_seuil*100:.0f}% d'occupation pour être rentable. Mettez en place des tarifs heures creuses et des abonnements pour fidéliser."
+    })
+else:
+    recommandations.append({
+        "type": "success",
+        "titre": "Seuil de rentabilité accessible",
+        "message": f"Avec seulement {taux_occup_seuil*100:.0f}% d'occupation nécessaire, votre projet a une bonne marge de sécurité."
+    })
+
+if not st.session_state.has_bar:
+    recommandations.append({
+        "type": "suggestion",
+        "titre": "Envisagez un bar",
+        "message": "Un bar peut représenter 15-25% de votre CA et améliore significativement l'expérience client. 70-80% des joueurs consomment après leur partie."
+    })
+
+if st.session_state.nb_terrains >= 6 and not st.session_state.get('propose_cours'):
+    recommandations.append({
+        "type": "suggestion",
+        "titre": "Proposez des cours",
+        "message": "Avec {0} terrains, vous avez la capacité d'accueillir des cours collectifs et stages. C'est un excellent moyen de fidéliser les débutants.".format(st.session_state.nb_terrains)
+    })
+
+# Recommandation financement
+apport_minimum = total_investment * 0.25
+recommandations.append({
+    "type": "info",
+    "titre": "Financement",
+    "message": f"Pour un projet de {total_investment:,.0f}€, prévoyez un apport personnel minimum de {apport_minimum:,.0f}€ (25%). Consultez BPI France pour des garanties de prêt."
+})
+
+for reco in recommandations:
+    if reco["type"] == "success":
+        st.success(f"✅ **{reco['titre']}** : {reco['message']}")
+    elif reco["type"] == "warning":
+        st.warning(f"⚠️ **{reco['titre']}** : {reco['message']}")
+    elif reco["type"] == "suggestion":
+        st.info(f"💡 **{reco['titre']}** : {reco['message']}")
+    else:
+        st.info(f"ℹ️ **{reco['titre']}** : {reco['message']}")
+
+# Lien vers conseils détaillés
+st.markdown("---")
+st.markdown("### 📚 Aller plus loin")
+
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("💡 Voir tous les conseils personnalisés", type="primary", use_container_width=True):
+        st.switch_page("pages/5_💡_Conseils_Personnalises.py")
+
+with col2:
+    st.info("Découvrez nos conseils détaillés sur le financement, le juridique, le marketing et l'exploitation de votre club.")
 
 # Export
 st.markdown("---")

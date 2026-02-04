@@ -97,6 +97,7 @@ st.sidebar.info("""
 2. 📍 Localisation & marché
 3. 💰 Modèle économique
 4. 📊 Business Plan final
+5. 💡 Conseils personnalisés
 """)
 
 # Page d'accueil
@@ -105,19 +106,20 @@ st.markdown("""
 
 Cet outil vous permet de créer un business plan professionnel pour votre projet de club de padel en France.
 
-### Comment ça marche ?
+### Comment ca marche ?
 
 1. **Configurez votre projet** : nombre de terrains, services, type d'immobilier
 2. **Choisissez votre localisation** : nous enrichissons avec des données du marché local
 3. **Définissez votre modèle économique** : pricing, services complémentaires
-4. **Obtenez votre business plan** : projections financières sur 3 ans, graphiques, export PDF
+4. **Obtenez votre business plan** : projections financières sur 3 ans, graphiques
+5. **Recevez des conseils personnalisés** : recommandations adaptées à votre projet
 
 ### Pourquoi utiliser cet outil ?
 
-✅ **Données du marché réel** : prix, taux d'occupation, benchmarks par ville  
-✅ **Calculs automatiques** : investissement, compte de résultat, seuil de rentabilité  
-✅ **Scénarios multiples** : optimiste, réaliste, pessimiste  
-✅ **Export professionnel** : business plan prêt à présenter aux banques
+✅ **Données du marché réel** : prix, taux d'occupation, benchmarks par ville
+✅ **Calculs automatiques** : investissement, compte de résultat, seuil de rentabilité
+✅ **Conseils personnalisés** : recommandations basées sur votre configuration
+✅ **Guide complet** : financement, juridique, marketing, exploitation
 
 ---
 

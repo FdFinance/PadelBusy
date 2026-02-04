@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 sys.path.append('/home/claude/padel-bp-generator')
+from data.conseils import get_conseil_terrains, get_conseil_type_terrain, get_conseil_immobilier
 
 st.set_page_config(page_title="Configuration", page_icon="📋", layout="wide")
 
@@ -56,6 +57,31 @@ with col3:
         st.session_state.ratio_indoor = ratio_indoor
         st.info(f"{int(nb_terrains * ratio_indoor/100)} Indoor + {int(nb_terrains * (100-ratio_indoor)/100)} Outdoor")
 
+# Conseils sur la configuration des terrains
+conseil_terrains = get_conseil_terrains(nb_terrains)
+conseil_type = get_conseil_type_terrain(type_terrain)
+
+with st.expander("💡 Conseils personnalisés pour votre configuration", expanded=False):
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(f"**Avec {nb_terrains} terrains :**")
+        st.markdown("*Avantages :*")
+        for av in conseil_terrains.get("avantages", [])[:2]:
+            st.markdown(f"- {av}")
+        st.markdown("*Point clé :*")
+        if conseil_terrains.get("conseils"):
+            st.info(conseil_terrains["conseils"][0])
+
+    with col2:
+        st.markdown(f"**Terrains {type_terrain} :**")
+        st.markdown("*Avantages :*")
+        for av in conseil_type.get("avantages", [])[:2]:
+            st.markdown(f"- {av}")
+        st.markdown("*Point clé :*")
+        if conseil_type.get("conseils"):
+            st.info(conseil_type["conseils"][0])
+
 # Services annexes
 st.markdown("---")
 st.markdown("#### 🍹 Services annexes")
@@ -86,6 +112,14 @@ with col2:
     )
     st.session_state.has_proshop = has_proshop
 
+# Conseils services
+if not has_bar and not has_proshop:
+    st.info("💡 **Conseil** : Un bar/restaurant est fortement recommandé ! 70-80% des joueurs consomment apres leur partie, ce qui genere des revenus complementaires importants et ameliore l'experience client.")
+elif has_bar and not has_proshop:
+    st.success("✅ **Bon choix** : Le bar est un excellent generateur de revenus et de convivialite.")
+elif has_bar and has_proshop:
+    st.success("✅ **Configuration complete** : Bar + Pro Shop = diversification optimale des revenus.")
+
 # Configuration immobilier
 st.markdown("---")
 st.markdown("#### 🏢 Configuration immobilière")
@@ -109,6 +143,23 @@ with col2:
         help="Clé en main = prêt à l'emploi, Travaux légers = rafraîchissement, Travaux lourds = rénovation complète"
     )
     st.session_state.travaux = travaux
+
+# Conseils immobilier
+conseil_immo = get_conseil_immobilier(immobilier)
+with st.expander("💡 Conseils pour votre choix immobilier", expanded=False):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f"**Avantages de la {immobilier.lower()} :**")
+        for av in conseil_immo.get("avantages", [])[:3]:
+            st.markdown(f"- {av}")
+    with col2:
+        st.markdown("**Points de vigilance :**")
+        for inc in conseil_immo.get("inconvenients", [])[:3]:
+            st.markdown(f"- {inc}")
+
+    st.markdown("**Conseil cle :**")
+    if conseil_immo.get("conseils"):
+        st.info(conseil_immo["conseils"][0])
 
 # Estimation surface
 st.markdown("---")

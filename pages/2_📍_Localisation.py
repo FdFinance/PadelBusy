@@ -2,6 +2,7 @@ import streamlit as st
 import sys
 sys.path.append('/home/claude/padel-bp-generator')
 from data.market_data import get_all_cities, get_city_data
+from data.conseils import get_conseil_marche
 
 st.set_page_config(page_title="Localisation", page_icon="📍", layout="wide")
 
@@ -137,9 +138,30 @@ with col2:
     else:
         st.warning("""
         ⚠️ **Vigilance requise**
-        
+
         Marché encore en développement. Privilégier un investissement prudent et prévoir une montée en charge progressive.
         """)
+
+# Conseils stratégiques basés sur le marché
+conseil_marche = get_conseil_marche(city_data['taux_occupation_moyen'])
+
+with st.expander("💡 Conseils stratégiques pour ce marché", expanded=True):
+    st.markdown(f"**{conseil_marche['analyse']}**")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Opportunités :**")
+        for opp in conseil_marche.get("opportunites", []):
+            st.markdown(f"- ✅ {opp}")
+
+    with col2:
+        st.markdown("**Risques à anticiper :**")
+        for risque in conseil_marche.get("risques", []):
+            st.markdown(f"- ⚠️ {risque}")
+
+    st.markdown("**Nos recommandations :**")
+    for conseil in conseil_marche.get("conseils", [])[:3]:
+        st.info(conseil)
 
 # Potentiel de clientèle
 st.markdown("---")
